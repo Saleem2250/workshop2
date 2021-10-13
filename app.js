@@ -35,5 +35,5 @@ app.get('/registration', (req,res)=>{
 })
 console.log("subscrieb toe hte channel please ")
 app.listen(PORT , (req, res)=>{
-    console.log('port is running ');
+    console.log(`port running at ${PORT}`);
 })
