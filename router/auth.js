@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
+const bcrypt = require('bcrypt');
 
 
 // router.get('/',(req,res)=>{
@@ -27,6 +28,7 @@ router.post('/register',async (req,res)=>{
             return res.status(422).json({error:"email is allready Exist"});
         }
         const user = new User({name , email, phone, work , password , cpassword})
+        ///here
         await user.save();
         res.status(201).json ({message: "user registerd succesfully"});
     } catch(err){
@@ -86,15 +88,26 @@ router.post('/signin', async (req,res)=>{
             return res.status(400).json({error:"plx fillled the data"})
 
         }
+
         const userLogin = await User.findOne({email:email});
-        console.log(userLogin);
-        if (!userLogin){
-            res.status(400).json({error: "user error"})
+        
+        // //console.log(userLogin);
+        if(userLogin){
+            const isMatch = await bcrypt.compare(password , userLogin.password)
+        if(!isMatch){
+            res.status(400).json({error:"invalid creditentials"})
 
         }else {
-            res.json({message:"user sign in Sucenfully "})
+            res.json({message:"user sigin succesfully"})
         }
-    }catch (err){
+        }else {
+            res.status(400).json({error:"Invalid credentials"})
+        }
+
+
+
+       
+    } catch (err){
         console.log(err);
     }
 });
