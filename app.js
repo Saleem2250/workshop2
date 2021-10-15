@@ -28,6 +28,7 @@ app.get('/about', middleware,(req,res)=>
     res.send("you are now in a about section of the page ")
 });
 app.get('/login' ,(req , res)=>{
+    res.cookie("jwtoken" , "saleem") 
     res.send("login required  : ")
 });
 app.get('/registration', (req,res)=>{

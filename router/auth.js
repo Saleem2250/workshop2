@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 
 // router.get('/',(req,res)=>{
@@ -82,6 +83,7 @@ router.post('/register',async (req,res)=>{
 
 // login  route 
 router.post('/signin', async (req,res)=>{
+    res.send('hello login ')
     try{
         const {email , password}=req.body;
         if(!email || !password){
@@ -94,6 +96,14 @@ router.post('/signin', async (req,res)=>{
         // //console.log(userLogin);
         if(userLogin){
             const isMatch = await bcrypt.compare(password , userLogin.password)
+            
+            const token = await userLogin.generateAuthToken();
+            console.log(token)
+            res.cookie("jwtoken" , token , {
+                expires:new Date(Date.now()+ 2592000000 ) ,
+                httpOnly: true
+            });
+
         if(!isMatch){
             res.status(400).json({error:"invalid creditentials"})
 
